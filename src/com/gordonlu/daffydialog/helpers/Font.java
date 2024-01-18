@@ -2,7 +2,8 @@ package com.gordonlu.daffydialog.helpers;
 
 import com.google.appinventor.components.common.OptionList;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum Font implements OptionList<String> {
     Default("DEFAULT"),
