@@ -580,10 +580,9 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
 
     public int getTheme() {
         if (classic) return 16974374;
-        else {
-            if (!lightTheme) return(fullscreen ? 16974122 : 16974545);
-            else return(fullscreen ? 16974125 : 16974546);
-        }
+        if (!lightTheme)
+            return(fullscreen ? 16974122 : 16974545);
+        return (fullscreen ? 16974125 : 16974546);
     }
 
     public Typeface getFont(String name) {
