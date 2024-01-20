@@ -579,6 +579,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         return lightTheme;
     }
 
+    @Deprecated
     @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN, defaultValue = "false")
     @SimpleProperty(description = "Specifies whether the dialogs should be dismissed when the user clicks anywhere " +
             "on the dinputMethodManagered background.")
@@ -586,6 +587,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         this.dismissWhenBackgroundClicked = dismissWhenBackgroundClicked;
     }
 
+    @Deprecated
     @SimpleProperty(description = "Specifies whether the dialogs should be dismissed when the user clicks anywhere " +
             "on the dinputMethodManagered background.", category = PropertyCategory.BEHAVIOR)
     public boolean DismissWhenBackgroundClicked() {
