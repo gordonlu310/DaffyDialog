@@ -616,13 +616,13 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
     }
 
     @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN, defaultValue = "true")
-    @SimpleProperty (description = "Specifies whether the theme of the dialog should be in light theme. If Classic is" +
+    @SimpleProperty (description = "Specifies whether the theme of the dialog should be in light theme. If Classic is " +
             "set to TRUE, the dialog will be displayed in Classic mode and this property will be ignored")
     public void LightTheme(boolean lightTheme) {
         this.lightTheme = lightTheme;
     }
     
-    @SimpleProperty(description = "Specifies whether the theme of the dialog should be in light theme. If Classic is" +
+    @SimpleProperty(description = "Specifies whether the theme of the dialog should be in light theme. If Classic is " +
             "set to TRUE, the dialog will be displayed in Classic mode and this property will be ignored",
             category = PropertyCategory.APPEARANCE)
     public boolean LightTheme() {
