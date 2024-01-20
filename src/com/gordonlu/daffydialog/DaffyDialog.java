@@ -231,21 +231,18 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 GotTextInputDialog(id, editText.getText().toString());
-                InputMethodManager inputMethodManager = (InputMethodManager) form.getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                ((InputMethodManager) form.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(editText.getWindowToken(), 0);
             }
         });
 
-        if (cancelable) {
+        if (cancelable)
             builder.setNegativeButton(getHtml(cancelButtonText), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     TextInputDialogCanceled(id);
-                    InputMethodManager inputMethodManager = (InputMethodManager) form.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                    ((InputMethodManager) form.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(editText.getWindowToken(), 0);
                 }
             });
-        }
 
         showAlertDialog(builder);
     }
@@ -409,8 +406,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 GotPasswordInputDialog(id, editText.getText().toString());
-                InputMethodManager inputMethodManager = (InputMethodManager) form.getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                ((InputMethodManager) form.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(editText.getWindowToken(), 0);
             }
         });
 
@@ -419,8 +415,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     PasswordInputDialogCanceled(id);
-                    InputMethodManager inputMethodManager = (InputMethodManager) form.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                    ((InputMethodManager) form.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(editText.getWindowToken(), 0);
                 }
             });
 
