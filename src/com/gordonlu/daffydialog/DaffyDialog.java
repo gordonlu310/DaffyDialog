@@ -40,6 +40,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.SpannedString;
 import android.text.method.PasswordTransformationMethod;
 
 import android.view.Gravity;
@@ -156,14 +157,9 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         progressBars.put(id, bar);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme());
-        if (html) {
-            builder.setTitle(getHtml(title));
-            builder.setMessage(getHtml(message));
-            cancelButtonText = getHtml(cancelButtonText).toString();
-        } else {
-            builder.setTitle(title);
-            builder.setMessage(message);
-        }
+        builder.setTitle(getHtml(title));
+        builder.setMessage(getHtml(message));
+        cancelButtonText = getHtml(cancelButtonText).toString();
         builder.setCancelable(dismissWhenBackgroundClicked);
         builder.setView(bar);
         
@@ -222,15 +218,11 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
             @Options(InputType.class) int inputType, @Options(Font.class) String inputFont, String buttonText,
             boolean cancelable, String cancelButtonText) {
         AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme());
-        if (html) {
-            builder.setTitle(getHtml(title));
-            builder.setMessage(getHtml(message));
-            buttonText = getHtml(buttonText).toString();
-            cancelButtonText = getHtml(cancelButtonText).toString();
-        } else {
-            builder.setTitle(title);
-            builder.setMessage(message);
-        }
+        builder.setTitle(getHtml(title));
+        builder.setMessage(getHtml(message));
+        buttonText = getHtml(buttonText).toString();
+        cancelButtonText = getHtml(cancelButtonText).toString();
+
         builder.setCancelable(dismissWhenBackgroundClicked);
 
         final EditText edit = new EditText(form);
@@ -248,8 +240,8 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 GotTextInputDialog(id, edit.getText().toString());
-                InputMethodManager imm = (InputMethodManager) form.getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
+                InputMethodManager inputMethodManager = (InputMethodManager) form.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(edit.getWindowToken(), 0);
             }
         });
 
@@ -258,8 +250,8 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     TextInputDialogCanceled(id);
-                    InputMethodManager imm = (InputMethodManager) form.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
+                    InputMethodManager inputMethodManager = (InputMethodManager) form.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(edit.getWindowToken(), 0);
                 }
             });
         }
@@ -282,15 +274,10 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
     @SimpleFunction(description = "Shows a custom message dialog.")
     public void CustomMessageDialog(final int id, String title, String message, String icon, String buttonText) {
         AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme());
+        builder.setTitle(getHtml(title));
+        builder.setMessage(getHtml(message));
+        buttonText = getHtml(buttonText).toString();
 
-        if (html) {
-            builder.setTitle(getHtml(title));
-            builder.setMessage(getHtml(message));
-            buttonText = getHtml(buttonText).toString();
-        } else {
-            builder.setTitle(title);
-            builder.setMessage(message);
-        }
         builder.setCancelable(dismissWhenBackgroundClicked);
         setDialogIcon(icon, "CustomMessageDialog", builder);
 
@@ -321,15 +308,10 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme());
         builder.setView(numberPicker);    
         builder.setCancelable(dismissWhenBackgroundClicked);
-        if (html) {
-            builder.setTitle(getHtml(title));
-            builder.setMessage(getHtml(message));
-            buttonText = getHtml(buttonText).toString();
-            cancelButtonText = getHtml(cancelButtonText).toString();
-        } else {
-            builder.setTitle(title);
-            builder.setMessage(message);
-        }
+        builder.setTitle(getHtml(title));
+        builder.setMessage(getHtml(message));
+        buttonText = getHtml(buttonText).toString();
+        cancelButtonText = getHtml(cancelButtonText).toString();
 
         setDialogIcon(icon, "ShowNumberPickerDialog", builder);
 
@@ -368,14 +350,9 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
     public void ShowImageDialog(final int id, String title, String message, String icon, String image, String buttonText) {
         AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme());
         builder.setCancelable(dismissWhenBackgroundClicked);
-        if (html) {
-            builder.setTitle(getHtml(title));
-            builder.setMessage(getHtml(message));
-            buttonText = getHtml(buttonText).toString();
-        } else {
-            builder.setTitle(title);
-            builder.setMessage(message);
-        }
+        builder.setTitle(getHtml(title));
+        builder.setMessage(getHtml(message));
+        buttonText = getHtml(buttonText).toString();
 
         setDialogIcon(icon, "ShowImageDialog", builder);
 
@@ -409,16 +386,11 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
     public void CustomChooseDialog(final int id, String message, String title, String icon, String button1Text,
             String button2Text, String cancelButtonText, boolean cancelable) {
         AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme());
-        if (html) {
-            builder.setTitle(getHtml(title));
-            builder.setMessage(getHtml(message));
-            button1Text = getHtml(button1Text).toString();
-            button2Text = getHtml(button2Text).toString();
-            cancelButtonText = getHtml(cancelButtonText).toString();
-        } else {
-            builder.setTitle(title);
-            builder.setMessage(message);
-        }
+        builder.setTitle(getHtml(title));
+        builder.setMessage(getHtml(message));
+        button1Text = getHtml(button1Text).toString();
+        button2Text = getHtml(button2Text).toString();
+        cancelButtonText = getHtml(cancelButtonText).toString();
         builder.setCancelable(dismissWhenBackgroundClicked);
 
         setDialogIcon(icon, "CustomChooseDialog", builder);
@@ -466,15 +438,10 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
             int hintColor, int inputColor, @Options(Font.class) String inputFont, boolean inputBold, boolean inputItalic,
             String buttonText, String cancelButtonText, boolean cancelable) {
         AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme());
-        if (html) {
-            builder.setTitle(getHtml(title));
-            builder.setMessage(getHtml(message));
-            buttonText = getHtml(buttonText).toString();
-            cancelButtonText = getHtml(cancelButtonText).toString();
-        } else {
-            builder.setTitle(title);
-            builder.setMessage(message);
-        }
+        builder.setTitle(getHtml(title));
+        builder.setMessage(getHtml(message));
+        buttonText = getHtml(buttonText).toString();
+        cancelButtonText = getHtml(cancelButtonText).toString();
         builder.setCancelable(dismissWhenBackgroundClicked);
         
         setDialogIcon(icon, "ShowPasswordInputDialog", builder);
@@ -502,8 +469,8 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     PasswordInputDialogCanceled(id);
-                    InputMethodManager imm = (InputMethodManager) form.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                    InputMethodManager inputMethodManager = (InputMethodManager) form.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
                 }
             });
 
@@ -547,30 +514,27 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
                 }
             }
             return new BitmapDrawable(form.getResources(), bitmap);
-        } else {
+        } else
             try {
                 return MediaUtil.getBitmapDrawable(form, path);
             } catch (IOException e) {
                 Error("Error while trying to read the assets: " + e.getMessage(), event);
                 return null;
             }
-        }
     }
 
     // https://community.appinventor.mit.edu/t/default-file-path-asd-code/57387/5?u=gordon_lu 
     public String getExternalStoragePath() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
             return form.getExternalFilesDir(null).getAbsolutePath();
-        } else {
-            return Environment.getExternalStorageDirectory().getAbsolutePath();
-        }
+        return Environment.getExternalStorageDirectory().getAbsolutePath();
     }
 
     public Spanned getHtml(String src) {
+        if (!html) return new SpannedString(src);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
             return Html.fromHtml(src, Html.FROM_HTML_MODE_COMPACT);
-        else
-            return Html.fromHtml(src);
+        return Html.fromHtml(src);
     }
 
     @SimpleEvent(description = "This event is invoked when an error has occurred with the given block of this extension.")
@@ -599,7 +563,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
     public AlertDialog showAlertDialog(AlertDialog.Builder builder) {
         AlertDialog dialog = builder.create();
         Window window = dialog.getWindow();
-        if(window != null){
+        if (window != null){
             window.addFlags(2);
             window.setDimAmount(dimAmount);
             window.setGravity(getGravity(verticalAlignment, 1));
@@ -671,13 +635,13 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
 
     @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN, defaultValue = "false")
     @SimpleProperty(description = "Specifies whether the dialogs should be dismissed when the user clicks anywhere " +
-            "on the dimmed background.")
+            "on the dinputMethodManagered background.")
     public void DismissWhenBackgroundClicked(boolean dismissWhenBackgroundClicked) {
         this.dismissWhenBackgroundClicked = dismissWhenBackgroundClicked;
     }
 
     @SimpleProperty(description = "Specifies whether the dialogs should be dismissed when the user clicks anywhere " +
-            "on the dimmed background.", category = PropertyCategory.BEHAVIOR)
+            "on the dinputMethodManagered background.", category = PropertyCategory.BEHAVIOR)
     public boolean DismissWhenBackgroundClicked() {
         return dismissWhenBackgroundClicked;
     }
