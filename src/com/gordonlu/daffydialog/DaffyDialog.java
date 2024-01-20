@@ -175,7 +175,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
                 }
             });
 
-        progressDialogs.put(id, showAlertDialog(builder));
+        progressDialogs.put(id, showAlertDialog(builder.create()));
     }
 
     @SimpleFunction (description = "Dismisses the linear progress dialog that is associated with the given ID.")
@@ -246,7 +246,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
                 }
             });
 
-        showAlertDialog(builder);
+        showAlertDialog(builder.create());
     }
 
     @SimpleEvent(description = "This event is invoked when the user has pressed the OK button in a text input dialog.")
@@ -272,7 +272,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
             }
         });
 
-        showAlertDialog(builder);
+        showAlertDialog(builder.create());
     }
 
     @SimpleEvent(description = "This event is invoked when the user has pressed the button in a custom message dialog.")
@@ -306,7 +306,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
                 }
             });
 
-        showAlertDialog(builder);
+        showAlertDialog(builder.create());
     }
 
     @SimpleEvent(description = "This event is invoked when the user has pressed the OK button in a number picker dialog.")
@@ -337,7 +337,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
             }
         });
 
-        showAlertDialog(builder);
+        showAlertDialog(builder.create());
     }
 
     @SimpleEvent(description = "This event is invoked when the user has pressed the button in an image dialog.")
@@ -371,7 +371,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
                 public void onClick(DialogInterface dialog, int id13) { CustomChooseDialogCanceled(id); }
             });
         
-        showAlertDialog(builder);
+        showAlertDialog(builder.create());
     }
 
     @SimpleEvent(description = "This event is invoked when the user has pressed button 1 or button 2 in a custom choose dialog.")
@@ -421,7 +421,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
                 }
             });
 
-        showAlertDialog(builder);
+        showAlertDialog(builder.create());
     }
 
     @SimpleEvent(description = "This event is invoked when the user has entered a password in a password input dialog.")
@@ -518,18 +518,6 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
     }
 
     public AlertDialog showAlertDialog(AlertDialog dialog) {
-        Window window = dialog.getWindow();
-        if (window != null){
-            window.addFlags(2);
-            window.setDimAmount(dimAmount);
-            window.setGravity(verticalGravities.get(verticalAlignment - 1) | horizontalGravities.get(horizontalAlignment - 1));
-        }
-        dialog.show();
-        return dialog;
-    }
-
-    public AlertDialog showAlertDialog(AlertDialog.Builder builder) {
-        AlertDialog dialog = builder.create();
         Window window = dialog.getWindow();
         if (window != null){
             window.addFlags(2);
