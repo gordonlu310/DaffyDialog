@@ -299,7 +299,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
     // These are blocks for the number picker dialogs.
 
     @SimpleFunction(description = "Displays a number picker dialog that enables the user to select a number from a predefined range.")
-    public void ShowNumberPickerDialog(final int id, String title, String icon, boolean useIcon, String buttonText,
+    public void ShowNumberPickerDialog(final int id, String title, String icon, String buttonText,
             String cancelButtonText, String message, int minValue, int maxValue, boolean cancelable) {
         final NumberPicker numberPicker = new NumberPicker(form);
         numberPicker.setMaxValue(maxValue);
