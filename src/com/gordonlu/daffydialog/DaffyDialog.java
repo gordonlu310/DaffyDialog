@@ -75,13 +75,16 @@ import java.util.List;
 public class DaffyDialog extends AndroidNonvisibleComponent {
 
     boolean html = false;
-    boolean lightTheme = true;
-    boolean dismissWhenBackgroundClicked = false;
     float dimAmount = 0.5f;
+
+    boolean lightTheme = true;
     boolean fullscreen = false;
     boolean classic = false;
+
     int verticalAlignment = 2;
     int horizontalAlignment = 3;
+
+    boolean dismissWhenBackgroundClicked = false;
 
     HashMap<Integer, AlertDialog> customDialogs = new HashMap<>();
 
