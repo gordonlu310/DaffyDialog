@@ -438,8 +438,10 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         if (childView != null) builder.setView(childView);
         builder.setCancelable(dismissWhenBackgroundClicked);
 
-        Drawable iconDrawable = getDrawableFromPath(icon, methodName);
-        if (iconDrawable != null) builder.setIcon(iconDrawable);
+        if (icon != null) {
+            Drawable iconDrawable = getDrawableFromPath(icon, methodName);
+            if (iconDrawable != null) builder.setIcon(iconDrawable);
+        }
 
         return builder;
     }
