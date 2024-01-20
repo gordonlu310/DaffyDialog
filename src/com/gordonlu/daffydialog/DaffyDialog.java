@@ -44,6 +44,7 @@ import android.text.SpannedString;
 import android.text.method.PasswordTransformationMethod;
 
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
@@ -150,7 +151,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         " method will have no effect.")
     public void ShowLinearProgressDialog(final int id, String title, String message, String icon,
             boolean progressIndeterminacy, int progressColor, int progressMaxValue, boolean cancelable,
-            String cancelButtonText) {
+            String cancelButtonText) {        
         ProgressBar bar = new ProgressBar(form, null, android.R.attr.progressBarStyleHorizontal);
         bar.setIndeterminate(progressIndeterminacy);
         bar.setPadding(20, 20, 20, 20);
@@ -162,17 +163,11 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         }
         progressBars.put(id, bar);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme());
-        builder.setTitle(getHtml(title));
-        builder.setMessage(getHtml(message));
-        cancelButtonText = getHtml(cancelButtonText).toString();
-        builder.setCancelable(dismissWhenBackgroundClicked);
+        AlertDialog.Builder builder = createAlertDialogBuilder("ShowLinearProgressDialog", title, message, icon, null);
         builder.setView(bar);
         
-        setDialogIcon(icon, "ShowLinearProgressDialog", builder);
-
         if (cancelable)
-            builder.setPositiveButton(cancelButtonText, new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(getHtml(cancelButtonText), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     LinearProgressDismissed(id);
@@ -223,41 +218,31 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
             String hint, int hintColor, boolean inputBold, boolean inputItalic, int inputColor,
             @Options(InputType.class) int inputType, @Options(Font.class) String inputFont, String buttonText,
             boolean cancelable, String cancelButtonText) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme());
-        builder.setTitle(getHtml(title));
-        builder.setMessage(getHtml(message));
-        buttonText = getHtml(buttonText).toString();
-        cancelButtonText = getHtml(cancelButtonText).toString();
+        final EditText editText = new EditText(form);
+        editText.setInputType(inputType);
+        editText.setHint(hint);
+        editText.setHintTextColor(hintColor);
+        editText.setText(defaultText);
+        editText.setTextColor(inputColor);
+        editText.setTypeface(getFont(inputFont), getTypeface(inputBold, inputItalic));
 
-        builder.setCancelable(dismissWhenBackgroundClicked);
-
-        final EditText edit = new EditText(form);
-        edit.setInputType(inputType);
-        edit.setHint(hint);
-        edit.setHintTextColor(hintColor);
-        edit.setText(defaultText);
-        edit.setTextColor(inputColor);
-        edit.setTypeface(getFont(inputFont), getTypeface(inputBold, inputItalic));
-
-        setDialogIcon(icon, "ShowTextInputDialog", builder);
-        
-        builder.setView(edit);
-        builder.setPositiveButton(buttonText, new DialogInterface.OnClickListener() {
+        AlertDialog.Builder builder = createAlertDialogBuilder("ShowTextInputDialog", title, message, icon, (View) editText);
+        builder.setPositiveButton(getHtml(buttonText), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                GotTextInputDialog(id, edit.getText().toString());
+                GotTextInputDialog(id, editText.getText().toString());
                 InputMethodManager inputMethodManager = (InputMethodManager) form.getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(edit.getWindowToken(), 0);
+                inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
             }
         });
 
         if (cancelable) {
-            builder.setNegativeButton(cancelButtonText, new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(getHtml(cancelButtonText), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     TextInputDialogCanceled(id);
                     InputMethodManager inputMethodManager = (InputMethodManager) form.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(edit.getWindowToken(), 0);
+                    inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
                 }
             });
         }
@@ -279,15 +264,9 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
 
     @SimpleFunction(description = "Shows a custom message dialog.")
     public void CustomMessageDialog(final int id, String title, String message, String icon, String buttonText) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme());
-        builder.setTitle(getHtml(title));
-        builder.setMessage(getHtml(message));
-        buttonText = getHtml(buttonText).toString();
+        AlertDialog.Builder builder = createAlertDialogBuilder("CustomMessageDialog", title, message, icon, null);
 
-        builder.setCancelable(dismissWhenBackgroundClicked);
-        setDialogIcon(icon, "CustomMessageDialog", builder);
-
-        builder.setPositiveButton(buttonText, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getHtml(buttonText), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 CustomMessageDialogClosed(id);
@@ -311,17 +290,9 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         numberPicker.setMaxValue(maxValue);
         numberPicker.setMinValue(minValue);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme());
-        builder.setView(numberPicker);    
-        builder.setCancelable(dismissWhenBackgroundClicked);
-        builder.setTitle(getHtml(title));
-        builder.setMessage(getHtml(message));
-        buttonText = getHtml(buttonText).toString();
-        cancelButtonText = getHtml(cancelButtonText).toString();
+        AlertDialog.Builder builder = createAlertDialogBuilder("ShowNumberPickerDialog", title, message, icon, numberPicker);
 
-        setDialogIcon(icon, "ShowNumberPickerDialog", builder);
-
-        builder.setPositiveButton(buttonText, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getHtml(buttonText), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 GotNumberPickerDialog(id, numberPicker.getValue());
@@ -329,7 +300,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         });
 
         if (cancelable)
-            builder.setNegativeButton(cancelButtonText, new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(getHtml(cancelButtonText), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     NumberPickerDialogCanceled(id);
@@ -354,21 +325,13 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
     @SimpleFunction(description = "Displays an image in a dialog. This requires an absolute path pointing to the image location." + 
     " All supported file types are PNG, JPEG and JPG. After the user has pressed the button, the extension will fire the ImageDialogClosed event.")
     public void ShowImageDialog(final int id, String title, String message, String icon, String image, String buttonText) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme());
-        builder.setCancelable(dismissWhenBackgroundClicked);
-        builder.setTitle(getHtml(title));
-        builder.setMessage(getHtml(message));
-        buttonText = getHtml(buttonText).toString();
-
-        setDialogIcon(icon, "ShowImageDialog", builder);
-
         final ImageView imageView = new ImageView(form);
         Drawable imageDrawable = getIcon(image, "ShowImageDialog");
         if (imageDrawable != null) imageView.setImageDrawable(imageDrawable);
 
-        builder.setView(imageView);
+        AlertDialog.Builder builder = createAlertDialogBuilder("ShowImageDialog", title, message, icon, imageView);
 
-        builder.setPositiveButton(buttonText, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getHtml(buttonText), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ImageDialogClosed(id);
@@ -389,33 +352,22 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
     + " with the same extension. The title and message parameter are for specifying the title and message of this dialog respectively. " + 
     " When the user has tapped button1 or button2 in this dialog, the extension fires the GotCustomChooseDialog event. " + 
     "If it is canceled, the extension will call the CustomChooseDialogCanceled event.") 
-    public void CustomChooseDialog(final int id, String message, String title, String icon, String button1Text,
-            String button2Text, String cancelButtonText, boolean cancelable) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme());
-        builder.setTitle(getHtml(title));
-        builder.setMessage(getHtml(message));
-        button1Text = getHtml(button1Text).toString();
-        button2Text = getHtml(button2Text).toString();
-        cancelButtonText = getHtml(cancelButtonText).toString();
-        builder.setCancelable(dismissWhenBackgroundClicked);
+    public void CustomChooseDialog(final int id, String message, String title, String icon, final String button1Text,
+            final String button2Text, String cancelButtonText, boolean cancelable) {
+        AlertDialog.Builder builder = createAlertDialogBuilder("CustomChooseDialog", title, message, icon, null);
 
-        setDialogIcon(icon, "CustomChooseDialog", builder);
-
-        final String temp1 = button1Text;
-        final String temp2 = button2Text;
-
-        builder.setPositiveButton(button1Text, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getHtml(button1Text), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) { GotCustomChooseDialog(id, temp1); }
+            public void onClick(DialogInterface dialog, int which) { GotCustomChooseDialog(id, getHtml(button1Text).toString()); }
         });
 
-        builder.setNeutralButton(button2Text, new DialogInterface.OnClickListener() {
+        builder.setNeutralButton(getHtml(button2Text), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) { GotCustomChooseDialog(id, temp2); }
+            public void onClick(DialogInterface dialog, int which) { GotCustomChooseDialog(id, getHtml(button2Text).toString()); }
         });
 
         if (cancelable)
-            builder.setNegativeButton(cancelButtonText, new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(getHtml(cancelButtonText), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int id13) { CustomChooseDialogCanceled(id); }
             });
@@ -443,15 +395,6 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
     public void ShowPasswordInputDialog(final int id, String title, String message, String icon, String defaultInputText, String hint, 
             int hintColor, int inputColor, @Options(Font.class) String inputFont, boolean inputBold, boolean inputItalic,
             String buttonText, String cancelButtonText, boolean cancelable) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme());
-        builder.setTitle(getHtml(title));
-        builder.setMessage(getHtml(message));
-        buttonText = getHtml(buttonText).toString();
-        cancelButtonText = getHtml(cancelButtonText).toString();
-        builder.setCancelable(dismissWhenBackgroundClicked);
-        
-        setDialogIcon(icon, "ShowPasswordInputDialog", builder);
-
         final EditText editText = new EditText(form);
         editText.setHint(hint);
         editText.setHintTextColor(hintColor);
@@ -459,9 +402,10 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         editText.setTextColor(inputColor);
         editText.setTypeface(getFont(inputFont), getTypeface(inputBold, inputItalic));
         editText.setTransformationMethod(new PasswordTransformationMethod());
-        builder.setView(editText);
 
-        builder.setPositiveButton(buttonText, new DialogInterface.OnClickListener() {
+        AlertDialog.Builder builder = createAlertDialogBuilder("ShowPasswordInputDialog", title, message, icon, editText);
+
+        builder.setPositiveButton(getHtml(buttonText), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 GotPasswordInputDialog(id, editText.getText().toString());
@@ -471,7 +415,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         });
 
         if (cancelable)
-            builder.setNegativeButton(cancelButtonText, new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(getHtml(cancelButtonText), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     PasswordInputDialogCanceled(id);
@@ -493,9 +437,17 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         EventDispatcher.dispatchEvent(this, "PasswordInputDialogCanceled", id);
     }
 
-    public void setDialogIcon(String icon, String eventName, AlertDialog.Builder builder) {
-        Drawable iconDrawable = getIcon(icon, eventName);
+    public AlertDialog.Builder createAlertDialogBuilder(String methodName, String title, String message, String icon, View childView) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme());
+        if (title != null) builder.setTitle(getHtml(title));
+        if (message != null) builder.setMessage(getHtml(message));
+        if (childView != null) builder.setView(childView);
+        builder.setCancelable(dismissWhenBackgroundClicked);
+
+        Drawable iconDrawable = getIcon(icon, methodName);
         if (iconDrawable != null) builder.setIcon(iconDrawable);
+
+        return builder;
     }
 
     public Drawable getIcon(String path, String event) {
