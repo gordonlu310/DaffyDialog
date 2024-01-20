@@ -112,19 +112,17 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
             Error("Sorry, a custom dialog with the id " + id +
                 " has already been used. Please create a custom dialog with a new ID.", "CreateCustomDialog");
         } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme());
-            builder.setView(component.getView());
-            builder.setCancelable(dismissWhenBackgroundClicked);
+            AlertDialog.Builder builder = createAlertDialogBuilder("CreateCustomDialog", null, null, null, component.getView());
 
-            customDialogs.put(id, builder.create());
             ((ViewGroup) component.getView().getParent()).removeView(component.getView());
+            customDialogs.put(id, builder.create());
         }
     }
 
     @SimpleFunction(description = "Shows the custom dialog that you have created with the ID.")
     public void ShowCustomDialog(int id) {
         if (customDialogs.containsKey(id))
-            customDialogs.get(id).show();
+           showAlertDialog(customDialogs.get(id));
         else
             Error("Sorry, a custom dialog with the id " + id + " does not exist.", "ShowCustomDialog");
     }
@@ -227,6 +225,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         editText.setTypeface(getFont(inputFont), getTypeface(inputBold, inputItalic));
 
         AlertDialog.Builder builder = createAlertDialogBuilder("ShowTextInputDialog", title, message, icon, (View) editText);
+
         builder.setPositiveButton(getHtml(buttonText), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -323,7 +322,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
     " All supported file types are PNG, JPEG and JPG. After the user has pressed the button, the extension will fire the ImageDialogClosed event.")
     public void ShowImageDialog(final int id, String title, String message, String icon, String image, String buttonText) {
         final ImageView imageView = new ImageView(form);
-        Drawable imageDrawable = getIcon(image, "ShowImageDialog");
+        Drawable imageDrawable = getDrawableFromPath(image, "ShowImageDialog");
         if (imageDrawable != null) imageView.setImageDrawable(imageDrawable);
 
         AlertDialog.Builder builder = createAlertDialogBuilder("ShowImageDialog", title, message, icon, imageView);
@@ -439,22 +438,29 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         if (childView != null) builder.setView(childView);
         builder.setCancelable(dismissWhenBackgroundClicked);
 
-        Drawable iconDrawable = getIcon(icon, methodName);
+        Drawable iconDrawable = getDrawableFromPath(icon, methodName);
         if (iconDrawable != null) builder.setIcon(iconDrawable);
 
         return builder;
     }
 
-    public Drawable getIcon(String path, String event) {
-        Bitmap bitmap = null;
+    public Drawable getDrawableFromPath(String path, String event) {
         if (path.startsWith("//")) {
+            Bitmap bitmap = null;
+
             if (form.isRepl()) {
-                String p;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                    p = getExternalStoragePath() + "/assets/" + path.substring(2);
+                String absolutePathOfAsset;
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                    absolutePathOfAsset = form.getExternalFilesDir(null).getAbsolutePath();
                 else
-                    p = getExternalStoragePath() + "/AppInventor/assets/" + path.substring(2);
-                bitmap = BitmapFactory.decodeFile(p);
+                    absolutePathOfAsset = Environment.getExternalStorageDirectory().getAbsolutePath();
+
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R)
+                    absolutePathOfAsset += "/AppInventor";
+                absolutePathOfAsset += "/assets/" + path.substring(2);
+
+                bitmap = BitmapFactory.decodeFile(absolutePathOfAsset);
             } else {
                 AssetManager assetManager = form.getAssets();
                 InputStream istr;
@@ -474,13 +480,6 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
                 Error("Error while trying to read the assets: " + e.getMessage(), event);
                 return null;
             }
-    }
-
-    // https://community.appinventor.mit.edu/t/default-file-path-asd-code/57387/5?u=gordon_lu 
-    public String getExternalStoragePath() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-            return form.getExternalFilesDir(null).getAbsolutePath();
-        return Environment.getExternalStorageDirectory().getAbsolutePath();
     }
 
     public Spanned getHtml(String src) {
@@ -511,6 +510,17 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         else if (bold && !italic) return Typeface.BOLD;
         else if (italic && !bold) return Typeface.ITALIC;
         else return Typeface.NORMAL;
+    }
+
+    public AlertDialog showAlertDialog(AlertDialog dialog) {
+        Window window = dialog.getWindow();
+        if (window != null){
+            window.addFlags(2);
+            window.setDimAmount(dimAmount);
+            window.setGravity(verticalGravities.get(verticalAlignment - 1) | horizontalGravities.get(horizontalAlignment - 1));
+        }
+        dialog.show();
+        return dialog;
     }
 
     public AlertDialog showAlertDialog(AlertDialog.Builder builder) {
