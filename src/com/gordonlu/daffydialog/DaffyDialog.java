@@ -57,7 +57,10 @@ import android.widget.ProgressBar;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 @DesignerComponent(
         version = 9,
@@ -77,18 +80,21 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
     boolean fullscreen = false;
     boolean classic = false;
     int verticalAlignment = 2;
-    int horizontalAlignment = 2;
+    int horizontalAlignment = 3;
 
     HashMap<Integer, AlertDialog> customDialogs = new HashMap<>();
 
     HashMap<Integer, ProgressBar> progressBars = new HashMap<>();
     HashMap<Integer, AlertDialog> progressDialogs = new HashMap<>();
 
-    HashMap<String, Typeface> fonts = new HashMap<String, Typeface>() {{
+    final HashMap<String, Typeface> fonts = new HashMap<String, Typeface>() {{
         put("MONOSPACE", Typeface.MONOSPACE);
         put("SANS SERIF", Typeface.SANS_SERIF);
         put("SERIF", Typeface.SERIF);
     }};
+
+    final List<Integer> verticalGravities = new ArrayList<>(Arrays.asList(Gravity.TOP, Gravity.CENTER_VERTICAL, Gravity.BOTTOM));
+    final List<Integer> horizontalGravities = new ArrayList<>(Arrays.asList(Gravity.LEFT, Gravity.RIGHT, Gravity.CENTER_HORIZONTAL));
 
     public DaffyDialog(ComponentContainer container){
         super(container.$form());
@@ -566,20 +572,10 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         if (window != null){
             window.addFlags(2);
             window.setDimAmount(dimAmount);
-            window.setGravity(getGravity(verticalAlignment, 1));
-            window.setGravity(getGravity(horizontalAlignment, 2));
+            window.setGravity(verticalGravities.get(verticalAlignment - 1) | horizontalGravities.get(horizontalAlignment - 1));
         }
         dialog.show();
         return dialog;
-    }
-
-    // type specifies whether the gravity received should be vertical or horizontal gravity, 1 and 2 respectively.
-    public int getGravity(int input, int type){
-        if (type == 1) {
-            return ((input == 1) ? Gravity.TOP : (input == 3) ? Gravity.BOTTOM : Gravity.CENTER_VERTICAL);
-        } else {
-            return ((input == 1) ? Gravity.LEFT : (input == 3) ? Gravity.RIGHT : Gravity.CENTER_HORIZONTAL);
-        }
     }
 
     // The following blocks are property blocks.
