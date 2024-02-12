@@ -81,8 +81,8 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
     boolean fullscreen = false;
     boolean classic = false;
 
-    int verticalAlignment = 2;
-    int horizontalAlignment = 3;
+    int verticalAlignmentDialog = 2;
+    int alignHorizontalDialog = 3;
 
     boolean dismissWhenBackgroundClicked = false;
 
@@ -435,21 +435,18 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
     }
 
     public AlertDialog.Builder createAlertDialogBuilder(String methodName, String title, String message, String icon, View childView) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme());
-        if (title != null) builder.setTitle(getHtml(title));
-        if (message != null) builder.setMessage(getHtml(message));
-        if (childView != null) builder.setView(childView);
-        builder.setCancelable(dismissWhenBackgroundClicked);
-
-        if (icon != null) {
-            Drawable iconDrawable = getDrawableFromPath(icon, methodName);
-            if (iconDrawable != null) builder.setIcon(iconDrawable);
-        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(form, getTheme())
+            .setTitle(getHtml(title))
+            .setMessage(getHtml(message))
+            .setView(childView)
+            .setIcon(getDrawableFromPath(icon, methodName))
+            .setCancelable(dismissWhenBackgroundClicked);
 
         return builder;
     }
 
     public Drawable getDrawableFromPath(String path, String event) {
+        if (path == null) return null;
         if (path.startsWith("//")) {
             Bitmap bitmap = null;
 
@@ -488,6 +485,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
     }
 
     public Spanned getHtml(String src) {
+        if (src == null) return null;
         if (!html) return new SpannedString(src);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
             return Html.fromHtml(src, Html.FROM_HTML_MODE_COMPACT);
@@ -522,7 +520,7 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         if (window != null){
             window.addFlags(2);
             window.setDimAmount(dimAmount);
-            window.setGravity(verticalGravities.get(verticalAlignment - 1) | horizontalGravities.get(horizontalAlignment - 1));
+            window.setGravity(verticalGravities.get(verticalAlignmentDialog - 1) | horizontalGravities.get(alignHorizontalDialog - 1));
         }
         dialog.show();
         return dialog;
@@ -579,7 +577,6 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         return lightTheme;
     }
 
-    @Deprecated
     @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN, defaultValue = "false")
     @SimpleProperty(description = "Specifies whether the dialogs should be dismissed when the user clicks anywhere " +
             "on the dinputMethodManagered background.")
@@ -587,7 +584,6 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
         this.dismissWhenBackgroundClicked = dismissWhenBackgroundClicked;
     }
 
-    @Deprecated
     @SimpleProperty(description = "Specifies whether the dialogs should be dismissed when the user clicks anywhere " +
             "on the dinputMethodManagered background.", category = PropertyCategory.BEHAVIOR)
     public boolean DismissWhenBackgroundClicked() {
@@ -598,14 +594,14 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
      defaultValue = ComponentConstants.GRAVITY_CENTER_VERTICAL + "")
     @SimpleProperty(description = "Specifies the vertical position of the dialog when it is shown. Options are Top, Center and Bottom.",
         category = PropertyCategory.APPEARANCE)
-    public void GravityVertical(@Options(VerticalAlignment.class) int verticalAlignment) {
-        this.verticalAlignment = verticalAlignment;
+    public void GravityVertical(@Options(VerticalAlignment.class) int verticalAlignmentDialog) {
+        this.verticalAlignmentDialog = verticalAlignmentDialog;
     }
 
     @SimpleProperty(description = "Specifies the vertical position of the dialog when it is shown. Options are Top," +
             " Center and Bottom.", category = PropertyCategory.APPEARANCE)
     public int GravityVertical() {
-        return verticalAlignment;
+        return verticalAlignmentDialog;
     }
 
     @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_HORIZONTAL_ALIGNMENT,
@@ -613,12 +609,12 @@ public class DaffyDialog extends AndroidNonvisibleComponent {
     @SimpleProperty(description = "Specifies the horizontal position of the dialog when it is shown. Options are Left, " +
             "Center and Right.", category = PropertyCategory.APPEARANCE)
     public void GravityHorizontal(@Options(HorizontalAlignment.class) int alignment) {
-        horizontalAlignment = alignment;
+        alignHorizontalDialog = alignment;
     }
 
     @SimpleProperty(description = "Specifies the horizontal position of the dialog when it is shown. Options are Left," +
             " Center and Right.", category = PropertyCategory.APPEARANCE)
     public int GravityHorizontal() {
-        return horizontalAlignment;
+        return alignHorizontalDialog;
     }
 }
